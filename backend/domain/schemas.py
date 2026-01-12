@@ -3,9 +3,9 @@ from typing import Optional
 from datetime import datetime
 
 
-# Простые схемы без сложной валидации для совместимости с pydantic v1
 
-# Student Schemas
+
+
 class StudentBase(BaseModel):
     name: str
     email: str
@@ -41,7 +41,6 @@ class CourseInDB(CourseBase):
     course_id: str
 
 
-# Grade Schemas
 class GradeBase(BaseModel):
     student_id: str
     course_id: str
@@ -58,7 +57,7 @@ class GradeInDB(GradeBase):
     date: datetime
 
 
-# Response Schemas
+
 class StudentResponse(StudentInDB):
     class Config:
         orm_mode = True
