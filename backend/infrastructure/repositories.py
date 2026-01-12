@@ -1,6 +1,4 @@
-"""
-Репозитории для работы с данными
-"""
+
 import json
 import os
 from typing import List, Optional, Dict, Any
@@ -21,7 +19,7 @@ class StudentRepository:
                 with open(self.file_path, 'r', encoding='utf-8') as f:
                     data = json.load(f)
                     for student_data in data:
-                        # Конвертируем строку даты обратно в datetime
+                       
                         created_at_str = student_data['created_at']
                         if isinstance(created_at_str, str):
                             try:
@@ -41,7 +39,7 @@ class StudentRepository:
                         self.students[student.student_id] = student
             except Exception as e:
                 print(f"Ошибка загрузки студентов: {e}")
-                # Если файл повреждён, начинаем с чистого листа
+             
                 self.students = {}
     
     def _save_to_file(self):
@@ -49,7 +47,7 @@ class StudentRepository:
         try:
             data = []
             for student in self.students.values():
-                # Конвертируем datetime в строку для JSON
+               
                 created_at_str = student.created_at.isoformat() if hasattr(student.created_at, 'isoformat') else datetime.now().isoformat()
                 
                 data.append({
@@ -176,7 +174,7 @@ class CourseRepository:
         return False
 
 
-# Создаём глобальные экземпляры репозиториев
+
 student_repo = StudentRepository()
 course_repo = CourseRepository()
 class GradeRepository:
@@ -192,7 +190,7 @@ class GradeRepository:
                 with open(self.file_path, 'r', encoding='utf-8') as f:
                     data = json.load(f)
                     for grade_data in data:
-                        # Конвертируем строку даты обратно в datetime
+                        
                         date_str = grade_data['date']
                         if isinstance(date_str, str):
                             try:
@@ -220,7 +218,7 @@ class GradeRepository:
         try:
             data = []
             for grade in self.grades.values():
-                # Конвертируем datetime в строку для JSON
+                
                 date_str = grade.date.isoformat() if hasattr(grade.date, 'isoformat') else datetime.now().isoformat()
                 
                 data.append({
@@ -299,9 +297,8 @@ class GradeRepository:
         if not student_grades:
             return None
         
-        # Простой расчет среднего
+       
         total = sum(grade.score for grade in student_grades)
-        return round(total / len(student_grades) / 20, 2)  # Конвертируем в 5-балльную шкалу
+        return round(total / len(student_grades) / 20, 2) 
 
-# Создаём глобальный экземпляр репозитория оценок
 grade_repo = GradeRepository()
