@@ -1,6 +1,4 @@
-"""
-API endpoints для управления курсами
-"""
+
 from fastapi import APIRouter, HTTPException, status
 from typing import List
 
@@ -8,7 +6,7 @@ from domain.schemas import CourseCreate, CourseResponse
 from domain.models import Course
 from infrastructure.repositories import course_repo
 
-# Создаём роутер
+
 router = APIRouter(prefix="/courses", tags=["courses"])
 
 @router.get("/", response_model=List[CourseResponse])
@@ -16,7 +14,7 @@ async def get_all_courses():
     """Получить все курсы"""
     courses = course_repo.get_all()
     if not courses:
-        # Добавляем тестовые курсы если база пуста
+       
         test_courses = [
             Course("CS101", "Введение в программирование", 4),
             Course("MATH201", "Высшая математика", 5),
@@ -42,7 +40,7 @@ async def get_course(course_id: str):
 @router.post("/", response_model=CourseResponse, status_code=status.HTTP_201_CREATED)
 async def create_course(course_data: CourseCreate):
     """Создать новый курс"""
-    # Проверяем уникальность кода курса
+  
     existing_course = course_repo.get_by_code(course_data.code)
     if existing_course:
         raise HTTPException(
@@ -50,7 +48,7 @@ async def create_course(course_data: CourseCreate):
             detail="Курс с таким кодом уже существует"
         )
     
-    # Создаём курс
+   
     new_course = Course(
         code=course_data.code,
         name=course_data.name,
