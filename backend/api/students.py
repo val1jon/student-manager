@@ -1,6 +1,4 @@
-"""
-API endpoints для управления студентами
-"""
+
 from fastapi import APIRouter, HTTPException, status
 from typing import List
 
@@ -8,7 +6,7 @@ from domain.schemas import StudentCreate, StudentUpdate, StudentResponse
 from domain.models import Student
 from infrastructure.repositories import student_repo
 
-# Создаём роутер
+
 router = APIRouter(prefix="/students", tags=["students"])
 
 @router.get("/", response_model=List[StudentResponse])
@@ -16,7 +14,7 @@ async def get_all_students():
     """Получить всех студентов"""
     students = student_repo.get_all()
     if not students:
-        # Добавляем тестовых студентов если база пуста
+       
         test_students = [
             Student("Иван Иванов", "ivan@example.com"),
             Student("Мария Петрова", "maria@example.com"),
@@ -42,7 +40,7 @@ async def get_student(student_id: str):
 @router.post("/", response_model=StudentResponse, status_code=status.HTTP_201_CREATED)
 async def create_student(student_data: StudentCreate):
     """Создать нового студента"""
-    # Проверяем уникальность email
+ 
     existing_student = student_repo.get_by_email(student_data.email)
     if existing_student:
         raise HTTPException(
@@ -50,7 +48,7 @@ async def create_student(student_data: StudentCreate):
             detail="Студент с таким email уже существует"
         )
     
-    # Создаём студента
+   
     new_student = Student(
         name=student_data.name,
         email=student_data.email
@@ -69,7 +67,7 @@ async def update_student(student_id: str, student_data: StudentUpdate):
             detail=f"Студент с ID {student_id} не найден"
         )
     
-    # Проверяем уникальность нового email если он изменяется
+    
     if student_data.email is not None and student_data.email != student.email:
         existing_student = student_repo.get_by_email(student_data.email)
         if existing_student:
@@ -78,7 +76,7 @@ async def update_student(student_id: str, student_data: StudentUpdate):
                 detail="Студент с таким email уже существует"
             )
     
-    # Обновляем поля
+    
     update_data = {}
     if student_data.name is not None:
         update_data['name'] = student_data.name
