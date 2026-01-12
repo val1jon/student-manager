@@ -1,6 +1,4 @@
-"""
-API endpoints для управления оценками
-"""
+
 from fastapi import APIRouter, HTTPException, status, Query
 from typing import List, Optional
 
@@ -8,7 +6,7 @@ from domain.schemas import GradeCreate, GradeResponse
 from domain.models import Grade
 from infrastructure.repositories import grade_repo, student_repo, course_repo
 
-# Создаём роутер
+
 router = APIRouter(prefix="/grades", tags=["grades"])
 
 @router.get("/", response_model=List[GradeResponse])
@@ -21,7 +19,7 @@ async def get_all_grades(
     """Получить все оценки с возможностью фильтрации"""
     grades = grade_repo.get_all()
     
-    # Применяем фильтры
+   
     if student_id:
         grades = [g for g in grades if g.student_id == student_id]
     
@@ -50,7 +48,7 @@ async def get_grade(grade_id: str):
 @router.post("/", response_model=GradeResponse, status_code=status.HTTP_201_CREATED)
 async def create_grade(grade_data: GradeCreate):
     """Создать новую оценку"""
-    # Проверяем существует ли студент
+   
     student = student_repo.get_by_id(grade_data.student_id)
     if not student:
         raise HTTPException(
@@ -58,7 +56,7 @@ async def create_grade(grade_data: GradeCreate):
             detail=f"Студент с ID {grade_data.student_id} не найден"
         )
     
-    # Проверяем существует ли курс
+   
     course = course_repo.get_by_id(grade_data.course_id)
     if not course:
         raise HTTPException(
@@ -66,7 +64,7 @@ async def create_grade(grade_data: GradeCreate):
             detail=f"Курс с ID {grade_data.course_id} не найден"
         )
     
-    # Создаём оценку
+   
     new_grade = Grade(
         student_id=grade_data.student_id,
         course_id=grade_data.course_id,
