@@ -1,6 +1,4 @@
-"""
-API endpoints для отчетов
-"""
+
 from fastapi import APIRouter, HTTPException, Query
 from typing import List, Dict, Any, Optional
 from datetime import datetime
@@ -25,12 +23,12 @@ async def get_students_summary(
         if student_grades:
             total_score = sum(g.score for g in student_grades)
             avg_score = total_score / len(student_grades)
-            gpa = round(avg_score / 20, 2)  # Конвертируем в 5-балльную шкалу
+            gpa = round(avg_score / 20, 2)  
         else:
             avg_score = 0
             gpa = 0
         
-        # Применяем фильтрацию по GPA если указана
+     
         if min_gpa is not None and gpa < min_gpa:
             continue
         if max_gpa is not None and gpa > max_gpa:
@@ -46,7 +44,7 @@ async def get_students_summary(
             "created_at": student.created_at
         })
     
-    # Сортируем по GPA (по убыванию)
+   
     summary.sort(key=lambda x: x["gpa"], reverse=True)
     
     return {
@@ -68,7 +66,7 @@ async def get_courses_summary():
             total_score = sum(g.score for g in course_grades)
             avg_score = total_score / len(course_grades)
             
-            # Распределение оценок
+            
             grade_distribution = {
                 "A": len([g for g in course_grades if g.score >= 90]),
                 "B": len([g for g in course_grades if g.score >= 80 and g.score < 90]),
@@ -90,7 +88,7 @@ async def get_courses_summary():
             "grade_distribution": grade_distribution
         })
     
-    # Сортируем по количеству оценок (по убыванию)
+   
     summary.sort(key=lambda x: x["grades_count"], reverse=True)
     
     return {
@@ -106,7 +104,7 @@ async def get_grades_statistics(
     """Получить статистику по оценкам"""
     grades = grade_repo.get_all()
     
-    # Применяем фильтры
+   
     if student_id:
         grades = [g for g in grades if g.student_id == student_id]
     
@@ -119,7 +117,7 @@ async def get_grades_statistics(
             "message": "Нет оценок для отображения"
         }
     
-    # Базовая статистика
+   
     scores = [g.score for g in grades]
     
     return {
@@ -141,7 +139,7 @@ async def get_top_students(limit: int = Query(10, ge=1, le=100, description="К�
     """Получить топ студентов по GPA"""
     students = student_repo.get_all()
     
-    # Сортируем студентов по GPA
+   
     students_with_gpa = []
     for student in students:
         gpa = student.gpa if student.gpa is not None else 0
@@ -152,7 +150,7 @@ async def get_top_students(limit: int = Query(10, ge=1, le=100, description="К�
     
     students_with_gpa.sort(key=lambda x: x["gpa"], reverse=True)
     
-    # Берем топ N
+  
     top_students = students_with_gpa[:limit]
     
     return {
@@ -207,7 +205,7 @@ async def get_student_progress(student_id: str):
             total_credits += course.credits
             weighted_score_sum += avg_score * course.credits
     
-    # Рассчитываем средневзвешенный балл
+    
     weighted_average = weighted_score_sum / total_credits if total_credits > 0 else 0
     
     return {
